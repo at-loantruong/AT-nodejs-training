@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var User = require('../models/user');
 
 exports.add = function(req, res) {
-  User.addUser(req, res);
+  User.addUser(req.body, res);
 }
 
 exports.getList = function(req, res) {

@@ -20,12 +20,21 @@ var userSchema = new Schema({
 
 var newUser = new User;
 let hash = bcrypt.hashSync('password', 10);
-console.log(hash);
-exports.addUser = function (req, res) {
-  User.create(req.body, function (err, data) {
-    if (err) res.json(err);
-    res.send(data);
-  });
+// console.log(hash);
+// exports.addUser = function (req, res) {
+//   User.create(req.body, function (err, data) {
+//     if (err) res.json(err);
+//     res.send(data);
+//   });
+// };
+exports.addUser = function(req, res) {
+  newUser.username = req.username;
+  newUser.password = hash;
+  newUser.age = req.age;
+  newUser.phone = req.phone;
+  newUser.save()
+  .then(data => res.send(data))
+  .catch(err => res.send(err));
 };
 
 exports.getList = function (req, res) {
