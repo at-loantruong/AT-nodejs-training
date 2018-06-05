@@ -2,9 +2,11 @@ var mongoose = require('mongoose');
 var User = require('../models/user');
 
 exports.add = function (req, res) {
-  User.addUser(req.body, function (err, user) {
-    if (err) throw err;
-    res.send(200, user);
+  User.addUser(req.body, function (err, data) {
+    if (err){
+      res.send('add error');
+    };
+    res.send(200, data);
   })
 }
 

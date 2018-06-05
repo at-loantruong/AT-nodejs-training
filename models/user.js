@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const Joi = require('joi');
-var userSchemas = require('../lib/validation');
+var userValidate = require('../lib/validation');
 var Schema = mongoose.Schema;
 var userSchema = new Schema({
   username: {
@@ -25,9 +25,8 @@ exports.addUser = function (user, callback) {
   const userData = {
     username: newUser.username,
     phone: newUser.phone,
-    password: newUser.password,
   }
-  Joi.validate(newUser, userSchemas, (err, value) => {
+  Joi.validate(userData, userValidate, (err, value) => {
     if(err) {
       console.log(err);
     } else {
