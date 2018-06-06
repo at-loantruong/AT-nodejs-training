@@ -5,10 +5,11 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var validate = require('express-validation');
 var groups = require('./routes/groups');
-var mongodb = require('mongodb');
-var mongoose = require('mongoose');
-mongoose.Promise = global.Promise;
+var APIError = require('./lib/APIError');
+var HttpStatus = require('http-status');
+var config = require('./config.js');
 
 var app = express();
 
@@ -38,10 +39,17 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  if (err instanceof validate.ValidationError) {
+    // validation error contains errors which is an array of error each containing message[]
+    const msg = err.errors.map(error => error.messages.join('. ')).join(' and ');
+    const e = new APIError(HttpStatus.BAD_REQUEST, `${msg}`);
+    return next(e);
+  } else if (!(err instanceof APIError)) {
+    const status = err.status || HttpStatus.INTERNAL_SERVER_ERROR;
+    const e = new APIError(status, err.message);
+    return next(e);
+  }
+  return next(err);
 });
-
-var mongoDB = 'mongodb://localhost/demoDB';
-mongoose.connect(mongoDB, { useMongoClient: true });
 
 module.exports = app;

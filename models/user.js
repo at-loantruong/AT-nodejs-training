@@ -22,17 +22,7 @@ User = mongoose.model('User', userSchema);
 
 exports.addUser = function (user, callback) {
   newUser = new User(user);
-  const userData = {
-    username: newUser.username,
-    phone: newUser.phone,
-  }
-  Joi.validate(userData, userValidate, (err, value) => {
-    if(err) {
-      console.log(err);
-    } else {
-      newUser.save(callback);
-    }
-  })
+  newUser.save(callback);
 };
 exports.getList = function (callback) {
   User.find({}, callback);

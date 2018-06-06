@@ -3,9 +3,7 @@ var User = require('../models/user');
 
 exports.add = function (req, res) {
   User.addUser(req.body, function (err, data) {
-    if (err){
-      res.send('add error');
-    };
+    if (err) throw err;
     res.send(200, data);
   })
 }

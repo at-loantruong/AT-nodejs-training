@@ -1,10 +1,12 @@
 var express = require('express');
 var router = express.Router();
+var validate = require('express-validation');
 var userController = require('../controller/userController');
+var userValidate = require('../lib/validation');
 
 router.get('/', userController.getList);
 
-router.post('/', userController.add);
+router.post('/', validate(userValidate.register), userController.add);
 
 router.get('/:id', userController.getSingle);
 
